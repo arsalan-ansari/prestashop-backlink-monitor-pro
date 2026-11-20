@@ -27,10 +27,23 @@ class backlinkmonitor extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Backlink Monitor Pro');
-        $this->description = $this->l('Advanced backlink & target health monitoring, accurate rel/anchor verification, diagnostics, and executive export reports.');
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall? All backlink monitoring data will be deleted.');
-        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
+        $this->displayName = $this->trans(
+            'Backlink Monitor Pro',
+            [],
+            'Modules.Backlinkmonitor.Admin'
+        );
+        $this->description = $this->trans(
+            'Advanced backlink & target health monitoring, accurate rel/anchor verification, diagnostics, and executive export reports.',
+            [],
+            'Modules.Backlinkmonitor.Admin'
+        );
+        $this->confirmUninstall = $this->trans(
+            'Are you sure you want to uninstall? All backlink monitoring data will be deleted.',
+            [],
+            'Modules.Backlinkmonitor.Admin'
+        );
+        $this->is_configurable = true;
+        $this->ps_versions_compliancy = ['min' => '1.7.6.0', 'max' => _PS_VERSION_];
     }
 
     public function install()
@@ -364,5 +377,18 @@ class backlinkmonitor extends Module
         $helper->fields_value['regenerate_cron_token'] = false;
 
         return $helper->generateForm([$fields_form]);
+    }
+
+    /**
+     * Modern translation bridge: routes legacy l() calls to Symfony trans()
+     * ensuring strict compliance with PrestaShop 8 & 9 while preserving backward compatibility.
+     */
+    public function l($string, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
+    {
+        if (method_exists($this, 'trans')) {
+            return $this->trans($string, [], 'Modules.Backlinkmonitor.Admin');
+        }
+
+        return parent::l($string, $specific, $class, $addslashes, $htmlentities);
     }
 }
